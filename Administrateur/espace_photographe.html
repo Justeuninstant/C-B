@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Connexion</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      padding: 2rem;
+    }
+
+    .login-container {
+      max-width: 400px;
+      margin: 50px auto;
+      padding: 2rem;
+      background: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 8px;
+    }
+
+    .login-container h2 {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .login-container input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .login-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 10px;
+      width: 100%;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .login-btn:hover {
+      background-color: #2980b9;
+    }
+
+    .error-message {
+      color: red;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-container">
+    <h2>Connexion</h2>
+
+    <form id="login-form">
+      <input type="text" id="username" placeholder="Nom d'utilisateur" required>
+      <input type="password" id="password" placeholder="Mot de passe" required>
+
+      <button type="submit" class="login-btn">
+        <img src="./assets/images/user.svg" width="21" height="21" alt="icône utilisateur">
+        <span class="span">Connexion</span>
+      </button>
+
+      <p class="error-message" id="error-msg"></p>
+    </form>
+  </div>
+
+  <script>
+    // Simuler un utilisateur (à remplacer avec une vraie base de données côté serveur)
+    const validUser = {
+      username: "admin",
+      password: "1234"
+    };
+
+    document.getElementById("login-form").addEventListener("submit", function(event) {
+      event.preventDefault(); // Empêche l'envoi du formulaire
+
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+      const errorMsg = document.getElementById("error-msg");
+
+        if (username === validUser.username && password === validUser.password) {
+            errorMsg.textContent = "";
+            // Stocker l'état connecté
+            sessionStorage.setItem("isLoggedIn", "true");
+            alert("Connexion réussie !");
+            window.location.href = "admin.html"; // Redirige vers la page admin
+        }
+    });
+  </script>
+
+</body>
+</html>
