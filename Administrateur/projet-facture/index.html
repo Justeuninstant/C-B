@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Éditeur Facture Séance Photo</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="container">
+    <header class="editor-header">
+      <h2>📝 Modifier la Facture</h2>
+    </header>
+
+    <!-- FORMULAIRE -->
+    <form id="facture-form">
+      <!-- Infos générales -->
+      <fieldset>
+        <legend>Informations Générales</legend>
+        <label>Date :
+          <input type="date" id="input-date" value="2016-01-03">
+        </label>
+        <label>N° Facture :
+          <input type="text" id="input-numero" value="C&B2025-001">
+        </label>
+      </fieldset>
+
+      <!-- Infos Client -->
+      <fieldset>
+        <legend>Client</legend>
+        <label>Nom :
+          <input type="text" id="input-client-nom" value="CHOMODE Laura">
+        </label>
+        <label>Adresse :
+          <input type="text" id="input-client-adresse" value="[Adresse masquée]">
+        </label>
+        <label>Téléphone :
+          <input type="text" id="input-client-tel" value="06XXXXXXXX">
+        </label>
+        <label>Email :
+          <input type="email" id="input-client-email" value="[adresse email masquée]">
+        </label>
+      </fieldset>
+
+      <!-- Prestations -->
+      <fieldset id="prestation-fieldset">
+        <legend>Prestations</legend>
+        <div id="prestation-lignes"></div>
+        <button type="button" class="add-line" onclick="ajouterLigne()">➕ Ajouter une ligne</button>
+      </fieldset>
+         <!-- BOUTON AFFICHAGE TIRAGES -->
+        <button type="button" id="toggle-tirages" onclick="toggleTirages()">📦 Afficher les tirages</button>
+
+      <!-- Tirages -->
+      <fieldset id="tirages-fieldset" style="display: none;">
+        <fieldset id="prestation-fieldset"></fieldset>
+        <legend>Commande(s) des tirages</legend>
+        <div id="tirages-lignes"></div>
+        <button type="button" class="add-line" onclick="ajouterLigneTirage()">➕ Ajouter une ligne de tirage</button>
+      </fieldset>
+
+      <!-- Frais -->
+      <fieldset>
+        <legend>Frais</legend>
+        <label>Frais de port :
+          <input type="number" id="input-frais-port" value="0" step="0.01" min="0"> €
+        </label>
+        <legend>Autres frais</legend>
+
+        <label>Distance parcourue (km) :
+            <input type="number" id="input-km" step="1" min="0" value="0"> km
+        </label>
+
+        <label>Prix par km :
+            <input type="number" id="input-km-prix" step="0.01" min="0" value="0.50"> €
+        </label>
+
+        <label>Options (frais supplémentaires) :
+            <input type="number" id="input-options" step="0.01" min="0" value="0.00"> €
+        </label>
+        </fieldset>
+    </form>
+
+    <hr>
+
+    <!-- PRÉVISUALISATION FACTURE -->
+    <section id="facture-preview">
+      <!-- <div class="facture-header"> -->
+        <!-- <div class="logo"> -->
+          <!-- <img src="image.png" alt="Logo photographe" /> -->
+        <!-- </div> -->
+        <div class="facture-info">
+          <h2>FACTURE</h2>
+          <p id="facture-date">Date : 03/01/2016<br>N° Facture : C&B2025-001</p>
+        </div>
+      <!-- </div> -->
+
+      <div class="infos">
+        <div class="photographe">
+          <strong>Photographe : Caboche Cindy</strong>
+          SIRET : 79470307400029<br>
+          106 Rue des Frères Caron, 62460 Divion, France<br>
+          Tél : 0665715209<br>
+          E-mail : justeuninstant.photographie@gmail.com<br>
+          <a href="https://justeuninstant.github.io/Justeuninstant/" target="_blank">justeuninstant.github.io</a>
+        </div>
+        <div class="client">
+          <strong id="client-nom">CHOMODE Laura</strong>
+          Adresse : <span id="client-adresse">[Adresse masquée]</span><br>
+          Tél : <span id="client-tel">06XXXXXXXX</span><br>
+          E-mail : <span id="client-email">[adresse email masquée]</span>
+        </div>
+      </div>
+
+      <p class="notice">
+        Chaque prestation compte plusieurs étapes. Cette facture est une facture finale qui reflète toutes les parties de la prestation.
+      </p>
+
+      <!-- Tableau des prestations -->
+      <h3>Détails de la séance photo</h3>
+      <table class="table" id="table-prestations">
+        <thead>
+          <tr>
+            <th>DATE, HEURE</th>
+            <th class="col-description">DESCRIPTION</th>
+            <th class="col-formules">FORMULES</th>
+            <th>TOTAL TTC</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Lignes ajoutées dynamiquement -->
+        </tbody>
+      </table>
+
+      <!-- Tableau des tirages -->
+        <h3 id="titre-tirages" style="display: none;">Commande(s) des tirages</h3>
+        <table class="table" id="table-tirages" style="display: none;">
+        <thead>
+          <tr>
+            <th>DATE</th>
+            <th>DESCRIPTION</th>
+            <th>TOTAL TTC</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Lignes ajoutées dynamiquement -->
+        </tbody>
+      </table>
+
+      <p class="tva-note">
+        Statut : auto-entrepreneur – TVA non applicable, art. 293 B du CGI
+      </p>
+
+      <!-- Totaux -->
+        <div class="total-box">
+        <table>
+            <tbody>
+            <tr><td>Services :</td><td id="total-services">0.00 €</td></tr>
+            <tr><td>Distance totale (km) :</td><td id="total-km">0.00 €</td></tr>
+            <tr id="ligne-options"><td>Options :</td><td id="total-options">0.00 €</td></tr>
+            <tr id="ligne-commandes"><td>Commandes :</td><td id="total-commandes">0.00 €</td></tr>
+            <tr id="ligne-frais-port"><td>Frais de port :</td><td id="total-frais-port">1.50 €</td></tr>
+            <tr class="total-ttc">
+                <td>Total TTC :</td><td id="total-ttc">0.00 €</td>
+            </tr>
+            </tbody>
+        </table>
+        </div>
+    </section>
+
+    <!-- BOUTON EXPORT -->
+    <button id="download-pdf">📄 Télécharger en PDF</button>
+  </main>
+
+  <!-- JS LIBS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <!-- TON SCRIPT JS -->
+  <script src="facture.js"></script>
+
+
+
+
+
+
+
+
+
+
+  <label>Choisir logo : <input type="file" id="logo-file" accept="image/png, image/jpeg" /></label>
+
+</body>
+</html>
